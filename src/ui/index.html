@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>وكيل المتصفح الذكي | Browser AI Agent</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-container">
+
+    <!-- شريط العنوان / Header -->
+    <header class="app-header">
+      <div class="header-brand">
+        <span class="header-icon">🤖</span>
+        <div class="header-title">
+          <h1>وكيل المتصفح الذكي</h1>
+          <span class="header-subtitle">Browser AI Agent</span>
+        </div>
+      </div>
+      <div class="header-status">
+        <div class="status-indicator" id="browserStatus">
+          <span class="status-dot" id="browserDot"></span>
+          <span id="browserStatusText">جاري الاتصال...</span>
+        </div>
+        <div class="status-indicator" id="agentStatus">
+          <span class="status-dot" id="agentDot"></span>
+          <span id="agentStatusText">الوكيل</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- المحتوى الرئيسي / Main content -->
+    <main class="app-main">
+
+      <!-- لوحة الدردشة / Chat panel -->
+      <aside class="chat-panel">
+        <div class="chat-header">
+          <h2>💬 المحادثة</h2>
+          <button class="btn btn-icon" id="clearBtn" title="مسح المحادثة">
+            🗑️
+          </button>
+        </div>
+
+        <!-- رسائل الدردشة / Chat messages -->
+        <div class="chat-messages" id="chatMessages">
+          <div class="welcome-message">
+            <div class="welcome-icon">👋</div>
+            <h3>مرحباً!</h3>
+            <p>أنا وكيل الذكاء الاصطناعي الذي يتحكم في متصفحك.</p>
+            <p>اكتب مهمة أدناه وسأنفذها خطوة بخطوة.</p>
+            <div class="example-tasks">
+              <p class="examples-title">أمثلة على المهام:</p>
+              <button class="example-task" onclick="setExampleTask(this)">
+                افتح موقع Google وابحث عن أحدث أخبار الذكاء الاصطناعي
+              </button>
+              <button class="example-task" onclick="setExampleTask(this)">
+                انتقل إلى github.com واعرض المستودعات الأكثر شهرة
+              </button>
+              <button class="example-task" onclick="setExampleTask(this)">
+                خذ لقطة شاشة للصفحة الحالية
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- خطوات التنفيذ / Execution steps -->
+        <div class="steps-panel" id="stepsPanel" style="display:none;">
+          <div class="steps-header">
+            <span>⚙️ خطوات التنفيذ</span>
+            <span class="steps-count" id="stepsCount">0 خطوة</span>
+          </div>
+          <div class="steps-list" id="stepsList"></div>
+        </div>
+
+        <!-- منطقة الإدخال / Input area -->
+        <div class="chat-input-area">
+          <div class="input-row">
+            <textarea
+              id="taskInput"
+              class="task-input"
+              placeholder="اكتب مهمة للوكيل... (مثال: افتح google.com وابحث عن...)"
+              rows="2"
+            ></textarea>
+          </div>
+          <div class="button-row">
+            <button class="btn btn-primary" id="executeBtn" onclick="executeTask()">
+              <span class="btn-icon">🚀</span>
+              <span>تنفيذ</span>
+            </button>
+            <button class="btn btn-danger" id="stopBtn" onclick="stopTask()" style="display:none;">
+              <span class="btn-icon">⏹️</span>
+              <span>إيقاف</span>
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- لوحة معلومات المهمة / Task info panel -->
+      <section class="info-panel">
+        <div class="info-header">
+          <h2>📊 حالة المهمة</h2>
+          <div class="task-status-badge" id="taskStatusBadge">
+            <span id="taskStatusIcon">⏸️</span>
+            <span id="taskStatusText">في الانتظار</span>
+          </div>
+        </div>
+
+        <!-- نتيجة المهمة / Task result -->
+        <div class="task-result" id="taskResult" style="display:none;">
+          <div class="result-header">
+            <span id="resultIcon">✅</span>
+            <h3 id="resultTitle">النتيجة</h3>
+          </div>
+          <div class="result-content" id="resultContent"></div>
+        </div>
+
+        <!-- إحصائيات / Stats -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">🔢</div>
+            <div class="stat-value" id="stepsCountStat">0</div>
+            <div class="stat-label">عدد الخطوات</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">⏱️</div>
+            <div class="stat-value" id="durationStat">-</div>
+            <div class="stat-label">المدة</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🌐</div>
+            <div class="stat-value" id="browserConnStat">غير متصل</div>
+            <div class="stat-label">المتصفح</div>
+          </div>
+        </div>
+
+        <!-- تعليمات الاتصال / Connection instructions -->
+        <div class="instructions-card" id="instructionsCard">
+          <h3>🔌 كيفية الاتصال</h3>
+          <ol>
+            <li>ثبّت إضافة <strong>Browser MCP</strong> في متصفحك</li>
+            <li>افتح الإضافة من شريط الأدوات</li>
+            <li>اضغط على زر <strong>Connect</strong></li>
+            <li>سيظهر مؤشر الاتصال باللون الأخضر</li>
+          </ol>
+          <a href="https://browsermcp.io" target="_blank" class="link-btn">
+            زيارة موقع Browser MCP ↗
+          </a>
+        </div>
+
+        <!-- معلومات API / API info -->
+        <div class="api-info-card">
+          <h3>🔧 نقاط API</h3>
+          <div class="api-endpoints">
+            <div class="endpoint">
+              <span class="method post">POST</span>
+              <code>/api/agent/execute</code>
+            </div>
+            <div class="endpoint">
+              <span class="method get">GET</span>
+              <code>/api/agent/status</code>
+            </div>
+            <div class="endpoint">
+              <span class="method post">POST</span>
+              <code>/api/agent/stop</code>
+            </div>
+            <div class="endpoint">
+              <span class="method post">POST</span>
+              <code>/api/agent/reset</code>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
