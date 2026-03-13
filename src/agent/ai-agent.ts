@@ -249,6 +249,15 @@ export class BrowserAIAgent {
     context: Context,
   ): Promise<string> {
     switch (toolName) {
+      case "browser_drag": {
+        const startElement = args.startElement as string;
+        const endElement = args.endElement as string;
+        const startRef = (args.startRef as string | undefined) ?? "";
+        const endRef = (args.endRef as string | undefined) ?? "";
+        await context.sendSocketMessage("browser_drag", { startElement, startRef, endElement, endRef });
+        return `تم السحب والإفلات / Dragged "${startElement}" to "${endElement}"`;
+      }
+
       case "browser_navigate": {
         const url = args.url as string;
         await context.sendSocketMessage("browser_navigate", { url });

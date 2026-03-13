@@ -32,6 +32,7 @@ const snapshotTools: Tool[] = [
   common.goForward(true),
   snapshot.snapshot,
   snapshot.click,
+  snapshot.drag,
   snapshot.hover,
   snapshot.type,
   snapshot.selectOption,
