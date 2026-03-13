@@ -221,6 +221,40 @@ export const browserToolDefinitions: OpenAI.Chat.ChatCompletionTool[] = [
   {
     type: "function",
     function: {
+      name: "browser_drag",
+      description:
+        "Drag an element from one location to another on the current page.",
+      parameters: {
+        type: "object",
+        properties: {
+          startElement: {
+            type: "string",
+            description:
+              "Human-readable description of the element to drag from (e.g., 'Draggable item')",
+          },
+          startRef: {
+            type: "string",
+            description:
+              "Optional element reference ID from the page snapshot for the source element",
+          },
+          endElement: {
+            type: "string",
+            description:
+              "Human-readable description of the target drop location (e.g., 'Drop zone')",
+          },
+          endRef: {
+            type: "string",
+            description:
+              "Optional element reference ID from the page snapshot for the target element",
+          },
+        },
+        required: ["startElement", "endElement"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
       name: "browser_get_console_logs",
       description:
         "Get the browser console logs from the current page. Useful for debugging JavaScript errors.",
